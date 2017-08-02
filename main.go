@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"github.com/GeertJohan/go.rice"
 	"github.com/crawlerclub/ce"
 	"github.com/crawlerclub/x/downloader"
 	"github.com/crawlerclub/x/types"
 	"github.com/golang/glog"
-	"github.com/gorilla/mux"
 	"net/http"
 	"strings"
 )
@@ -21,7 +21,8 @@ func mustEncode(w http.ResponseWriter, i interface{}) {
 	w.Header().Set("Content-type", "application/json;charset=utf-8")
 	e := json.NewEncoder(w)
 	if err := e.Encode(i); err != nil {
-		panic(err)
+		//panic(err)
+		e.Encode(err.Error())
 	}
 }
 
@@ -58,8 +59,8 @@ func main() {
 	flag.Parse()
 	defer glog.Flush()
 	defer glog.Info("server exit")
-	router := mux.NewRouter()
-	router.HandleFunc("/api/", ArticleHandler)
+	http.HandleFunc("/api/", ArticleHandler)
+	http.Handle("/", http.FileServer(rice.MustFindBox("ui").HTTPBox()))
 	glog.Info("server listen on", *serverAddr)
-	http.ListenAndServe(*serverAddr, router)
+	http.ListenAndServe(*serverAddr, nil)
 }
