@@ -1,0 +1,15 @@
+fieldset {
+    padding:.35em .625em .75em;
+    margin:0 2px;
+    border:1px dotted silver;
+}
+
+legend {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    width: auto;
+    font-size: 95%;
+    font-weight: 700;
+    line-height: 1;
+}
