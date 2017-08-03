@@ -5,8 +5,7 @@ import (
 	"flag"
 	"github.com/GeertJohan/go.rice"
 	"github.com/crawlerclub/ce"
-	"github.com/crawlerclub/x/downloader"
-	"github.com/crawlerclub/x/types"
+	"github.com/crawlerclub/dl"
 	"github.com/golang/glog"
 	"net/http"
 	"strings"
@@ -36,8 +35,8 @@ func ArticleHandler(w http.ResponseWriter, r *http.Request) {
 		debug = true
 	}
 	url := r.FormValue("url")
-	req := &types.HttpRequest{Url: url, Method: "GET", UseProxy: false, Platform: "pc"}
-	res := downloader.Download(req)
+	req := &dl.HttpRequest{Url: url, Method: "GET", UseProxy: false, Platform: "pc"}
+	res := dl.Download(req)
 	if res.Error != nil {
 		mustEncode(w, struct {
 			Status  string `json:"status"`
@@ -62,5 +61,5 @@ func main() {
 	http.HandleFunc("/api/", ArticleHandler)
 	http.Handle("/", http.FileServer(rice.MustFindBox("ui").HTTPBox()))
 	glog.Info("server listen on", *serverAddr)
-	http.ListenAndServe(*serverAddr, nil)
+	glog.Error(http.ListenAndServe(*serverAddr, nil))
 }
