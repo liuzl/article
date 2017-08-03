@@ -7,7 +7,9 @@
     <link rel='stylesheet' href='./bootstrap3.3.7/css/bootstrap.min.css'>
     <link rel="stylesheet" href="./css/AdminLTE.min.css">
     <link rel='stylesheet' href='./css/json-viewer.css'>
+    <link rel='stylesheet' href='./css/index.css'>
     <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./bootstrap3.3.7/js/bootstrap.min.js"></script>
     <script src="./js/json-viewer.js"></script>
     <script src="./js/util.js"></script>
   </head>
@@ -31,9 +33,16 @@
             </div>
         </div>
         <div class="row">
-            <div id='editor_holder'></div>
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#visual" data-toggle="tab">Visual</a></li>
+                <li><a href="#editor_holder" data-toggle="tab">JSON</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="visual"></div>
+                <div class="tab-pane fade" id="editor_holder"></div>
+            </div>
         </div>
     </section>
-    <script src="index.js"></script>
+    <script src="./js/index.js"></script>
   </body>
 </html>

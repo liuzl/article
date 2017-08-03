@@ -1,6 +1,6 @@
 fieldset {
     padding:.35em .625em .75em;
-    margin:0 2px;
+    margin:6px 2px;
     border:1px dotted silver;
 }
 
@@ -9,7 +9,14 @@ legend {
     margin: 0;
     border: 0;
     width: auto;
-    font-size: 95%;
-    font-weight: 700;
     line-height: 1;
+}
+
+img {
+    max-width: 100%;
+    height: auto; 
+}
+
+.left {
+    text-align: left;
 }

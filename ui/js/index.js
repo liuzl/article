@@ -27,32 +27,25 @@ function testCrawler(url) {
 }
 
 function one(k, v) {
-    return "<fieldset><legend>"+k+"</legend>"+v+"</fieldset>";
+    return "<fieldset><legend class=\"label label-info left\">"+
+        k+"</legend>"+v+"</fieldset>";
 }
 
 function visual(doc) {
     var html = "";
     for (k in doc) {
-        if (doc[k] == "") {
-            continue;
-        }
+        if (k == "text" || doc[k] == "") continue;
         var v = doc[k];
         if (k == "url" || k == "canonical_url") {
             v = "<a href=\""+v+"\">"+v+"</a>";
-        } else if (k == "text") {
-            v = "<pre>"+v+"</pre>";
         } else if (k == "favicon") {
             v = "<img src=\""+v+"\" />";
         } else if (k == "images") {
-            var str = "<ul>";
-            for (i in v) {
-                str += "<li><img src=\""+v[i]+"\" /></li>";
-            }
-            str += "</ul>";
-            v = str;
+            var str = "<ol>";
+            for (i in v) str += "<li><img src=\""+v[i]+"\" /></li>";
+            v = str + "</ol>";
         }
         html += one(k, v);
     }
     $("#visual").html(html);
-
 }
