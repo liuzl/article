@@ -14,6 +14,7 @@ $(document).ready(function() {
 
 function testCrawler(url) {
     $('#editor_holder').html("<h4>loading...</h4>");
+    $("#visual").html("<h4>loading...</h4>");
     $.ajax({
         url: "/api/?url="+url, cache: false,
         success: function(result) {
