@@ -48,7 +48,7 @@ func ArticleHandler(w http.ResponseWriter, r *http.Request) {
 		debug = true
 	}
 	url := r.FormValue("url")
-	req := &dl.HttpRequest{Url: url, Method: "GET", UseProxy: false, Platform: "pc"}
+	req := &dl.HttpRequest{Url: url, Method: "GET", UseProxy: false, Platform: "mobile"}
 	res := dl.Download(req)
 	if res.Error != nil {
 		mustEncode(w, struct {
