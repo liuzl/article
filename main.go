@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	serverAddr = flag.String("addr", ":8080", "bind address")
+	addr = flag.String("addr", ":8080", "bind address")
 )
 
 func ArticleHandler(w http.ResponseWriter, r *http.Request) {
@@ -50,6 +50,6 @@ func main() {
 	defer glog.Info("server exit")
 	http.Handle("/api/", rest.WithLog(ArticleHandler))
 	http.Handle("/", http.FileServer(rice.MustFindBox("ui").HTTPBox()))
-	glog.Info("server listen on", *serverAddr)
-	glog.Error(http.ListenAndServe(*serverAddr, nil))
+	glog.Info("server listen on", *addr)
+	glog.Error(http.ListenAndServe(*addr, nil))
 }
