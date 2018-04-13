@@ -1,42 +1,19 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"github.com/GeertJohan/go.rice"
 	"github.com/crawlerclub/ce"
 	"github.com/crawlerclub/dl"
 	"github.com/golang/glog"
+	"github.com/liuzl/goutil/rest"
 	"net/http"
-	"net/http/httputil"
 	"strings"
 )
 
 var (
 	serverAddr = flag.String("addr", ":8080", "bind address")
 )
-
-func mustEncode(w http.ResponseWriter, i interface{}) {
-	w.Header().Set("Cache-Control", "no-cache")
-	w.Header().Set("Content-type", "application/json;charset=utf-8")
-	e := json.NewEncoder(w)
-	if err := e.Encode(i); err != nil {
-		//panic(err)
-		e.Encode(err.Error())
-	}
-}
-
-func EchoHandler(w http.ResponseWriter, r *http.Request) {
-	dump, err := httputil.DumpRequest(r, true)
-	if err != nil {
-		mustEncode(w, struct {
-			Status  string `json:"status"`
-			Message string `json:"message"`
-		}{Status: "error", Message: err.Error()})
-		return
-	}
-	w.Write(dump)
-}
 
 func ArticleHandler(w http.ResponseWriter, r *http.Request) {
 	glog.Infof("addr=%s  method=%s host=%s uri=%s",
@@ -51,7 +28,7 @@ func ArticleHandler(w http.ResponseWriter, r *http.Request) {
 	req := &dl.HttpRequest{Url: url, Method: "GET", UseProxy: false, Platform: "mobile"}
 	res := dl.Download(req)
 	if res.Error != nil {
-		mustEncode(w, struct {
+		rest.MustEncode(w, struct {
 			Status  string `json:"status"`
 			Message string `json:"message"`
 		}{Status: "error", Message: res.Error.Error()})
@@ -64,32 +41,14 @@ func ArticleHandler(w http.ResponseWriter, r *http.Request) {
 		ip = items[0]
 	}
 	doc := ce.ParsePro(url, res.Text, ip, debug)
-	mustEncode(w, doc)
-}
-
-func ExtractHandler(w http.ResponseWriter, r *http.Request) {
-	glog.Infof("addr=%s  method=%s host=%s uri=%s",
-		r.RemoteAddr, r.Method, r.Host, r.RequestURI)
-	r.ParseForm()
-	debug := false
-	debugStr := r.FormValue("debug")
-	if debugStr == "on" || debugStr == "true" {
-		debug = true
-	}
-	url := r.FormValue("url")
-	raw := r.Form.Get("html")
-	ip := r.FormValue("ip")
-	doc := ce.ParsePro(url, raw, ip, debug)
-	mustEncode(w, doc)
+	rest.MustEncode(w, doc)
 }
 
 func main() {
 	flag.Parse()
 	defer glog.Flush()
 	defer glog.Info("server exit")
-	http.HandleFunc("/api/", ArticleHandler)
-	http.HandleFunc("/extract/", ExtractHandler)
-	http.HandleFunc("/echo/", EchoHandler)
+	http.Handle("/api/", rest.WithLog(ArticleHandler))
 	http.Handle("/", http.FileServer(rice.MustFindBox("ui").HTTPBox()))
 	glog.Info("server listen on", *serverAddr)
 	glog.Error(http.ListenAndServe(*serverAddr, nil))
