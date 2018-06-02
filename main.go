@@ -2,13 +2,14 @@ package main
 
 import (
 	"flag"
+	"net/http"
+	"strings"
+
 	"github.com/GeertJohan/go.rice"
 	"github.com/crawlerclub/ce"
 	"github.com/crawlerclub/dl"
 	"github.com/golang/glog"
 	"github.com/liuzl/goutil/rest"
-	"net/http"
-	"strings"
 )
 
 var (
