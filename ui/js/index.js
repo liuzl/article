@@ -23,7 +23,7 @@ function testCrawler(url) {
     $('#editor_holder').html("<h4>loading...</h4>");
     $("#visual").html("<h4>loading...</h4>");
     $.ajax({
-        url: "/api/?url="+encodeURIComponent(url), cache: false,
+        url: "./api/?url="+encodeURIComponent(url), cache: false,
         success: function(result) {
             $('#editor_holder').jsonview(result);
             visual(result)
