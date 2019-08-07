@@ -29,10 +29,7 @@ func ArticleHandler(w http.ResponseWriter, r *http.Request) {
 	req := &dl.HttpRequest{Url: url, Method: "GET", UseProxy: false, Platform: "mobile"}
 	res := dl.Download(req)
 	if res.Error != nil {
-		rest.MustEncode(w, struct {
-			Status  string `json:"status"`
-			Message string `json:"message"`
-		}{Status: "error", Message: res.Error.Error()})
+		rest.MustEncode(w, rest.RestMessage{"error", res.Error.Error()})
 		return
 	}
 
